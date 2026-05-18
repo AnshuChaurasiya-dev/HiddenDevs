@@ -1,0 +1,257 @@
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:WaitForChild("TweenService")
+local Players = game:WaitForChild("Players")
+local RunService = game:WaitForChild("Run Service")
+
+local Player = Players.LocalPlayer
+local Character = Player.Character or Player.CharacterAdded:Wait()
+local Humanoid = Character:WaitForChild("Humanoid")
+
+local PanelGUI = Player:WaitForChild("PlayerGui"):WaitForChild("Panel")
+local PanelLabel = PanelGUI:WaitForChild("PanelLabel")
+
+function ChangePanel(Text)
+	PanelLabel.Text = Text
+
+	PanelLabel.Visible = true
+	local Tweeninfo = TweenInfo.new(.5,Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
+	
+	local Goal = {
+		Position = UDim2.new(0.012, 0,0.056, 0),
+		Rotation = 0
+	}
+	
+	local Tween = TweenService:Create(PanelLabel, Tweeninfo, Goal)
+	Tween:Play()
+	
+	task.wait(1)
+	
+	local Tweeninfo2 = TweenInfo.new(.5,Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
+
+	local Goal2 = {
+		Position = UDim2.new(0.012, 0,1.5, 0),
+		Rotation = 90
+	}
+	
+	local Tween2 = TweenService:Create(PanelLabel, Tweeninfo2 , Goal2)
+	Tween2:Play()
+	
+	PanelLabel.Visible = false
+	
+end
+
+local Camera = workspace.Camera
+
+local WalkAnimation = Character:WaitForChild("Animate"):WaitForChild("walk"):WaitForChild("WalkAnim")
+
+local CrouchAnimation = Instance.new("Animation")
+CrouchAnimation.AnimationId = "rbxassetid://131923363852460"
+local CrouchTrack = Humanoid:LoadAnimation(CrouchAnimation)
+
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+	if gameProcessedEvent then
+		return
+	end
+	
+	if input.KeyCode == Enum.KeyCode.R then
+		local Tweeninfo = TweenInfo.new(1.5,Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
+		
+		local Goal = {
+			FieldOfView = 90
+		}
+		
+		local Tween = TweenService:Create(Camera, Tweeninfo, Goal)
+		Tween:Play()
+		Humanoid.WalkSpeed = 30
+		
+		WalkAnimation.AnimationId = "rbxassetid://87444749076044"
+		
+		task.spawn(function()
+			ChangePanel("Sprint Mode")
+		end)
+		
+	end
+	
+	if input.KeyCode == Enum.KeyCode.F then
+		
+		task.spawn(function()
+			ChangePanel("Slow Motion")
+		end)
+		
+		local Tweeninfo = TweenInfo.new(1.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
+		
+		local Goal = {
+			FieldOfView = 55
+		}
+		
+		local Tween = TweenService:Create(Camera, Tweeninfo, Goal)
+		Tween:Play()
+		Humanoid.WalkSpeed = 8
+		
+		local Walk = Character:WaitForChild("Animate"):WaitForChild("walk"):WaitForChild("WalkAnim")
+		local WalkTrack = Humanoid:LoadAnimation(Walk)
+		local IdleAnimation = Character:WaitForChild("Animate"):WaitForChild("idle"):WaitForChild("Animation1")
+		local IdleAnimation2 = Character:WaitForChild("Animate"):WaitForChild("idle"):WaitForChild("Animation2")
+		local IdleTrack = Humanoid:LoadAnimation(IdleAnimation)
+		local IdleTrack2 = Humanoid:LoadAnimation(IdleAnimation2)
+		
+		WalkTrack:AdjustSpeed(0.1)
+		IdleTrack:AdjustSpeed(0.4)
+		IdleTrack2:AdjustSpeed(0.4)
+	end
+	
+	if input.KeyCode == Enum.KeyCode.C then
+		
+		task.spawn(function()
+			ChangePanel("Crouch Mode")
+		end)
+		
+		local Tweeninfo = TweenInfo.new(1.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
+		
+		local Goal = {
+			FieldOfView = 50
+		}
+		
+		local Tween = TweenService:Create(Camera, Tweeninfo, Goal)
+		Tween:Play()
+		
+		Humanoid.WalkSpeed = 8
+		WalkAnimation.AnimationId = CrouchAnimation.AnimationId
+	end
+	
+	
+	if input.KeyCode == Enum.KeyCode.B then
+		
+		task.spawn(function()
+			ChangePanel("Fast Motion")
+		end)
+		
+		local Tweeninfo = TweenInfo.new(1.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
+		
+		local Goal = {
+			FieldOfView = 100
+		}
+		
+		local Tween = TweenService:Create(Camera, Tweeninfo, Goal)
+		Tween:Play()
+		
+		Humanoid.WalkSpeed = 50
+		
+		local Walk = Character:WaitForChild("Animate"):WaitForChild("walk"):WaitForChild("WalkAnim")
+		local WalkTrack = Humanoid:LoadAnimation(Walk)
+		local IdleAnimation = Character:WaitForChild("Animate"):WaitForChild("idle"):WaitForChild("Animation1")
+		local IdleAnimation2 = Character:WaitForChild("Animate"):WaitForChild("idle"):WaitForChild("Animation2")
+		local IdleTrack = Humanoid:LoadAnimation(IdleAnimation)
+		local IdleTrack2 = Humanoid:LoadAnimation(IdleAnimation2)
+
+		WalkTrack:AdjustSpeed(3)
+		IdleTrack:AdjustSpeed(3)
+		IdleTrack2:AdjustSpeed(3)
+		
+	end
+end)
+
+
+UserInputService.InputEnded:Connect(function(input, gameProcessedEvent)
+	if gameProcessedEvent then
+		return
+	end
+	
+	if input.KeyCode == Enum.KeyCode.R then
+		
+		task.spawn(function()
+			ChangePanel("Sprint Mode Off")
+		end)
+		
+		WalkAnimation.AnimationId = "rbxassetid://110337699181161"
+		local Tweeninfo = TweenInfo.new(1.5,Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
+		
+		local Goal = {
+			FieldOfView = 70
+		}
+		
+		local Tween = TweenService:Create(Camera, Tweeninfo, Goal)
+		Tween:Play()
+		Humanoid.WalkSpeed = 16	
+		
+		
+	end
+	
+	if input.KeyCode == Enum.KeyCode.F then
+		
+		task.spawn(function()
+			ChangePanel("Normal")
+		end)
+		local Tweeninfo = TweenInfo.new(1.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
+		
+		local Goal ={
+			FieldOfView = 70
+		}
+		
+		local Tween = TweenService:Create(Camera, Tweeninfo, Goal)
+		Tween:Play()
+		Humanoid.WalkSpeed = 16
+		
+		local WalkTrack = Humanoid:LoadAnimation(WalkAnimation)
+		local IdleAnimation = Character:WaitForChild("Animate"):WaitForChild("idle"):WaitForChild("Animation1")
+		local IdleAnimation2 = Character:WaitForChild("Animate"):WaitForChild("idle"):WaitForChild("Animation2")
+		local IdleTrack = Humanoid:LoadAnimation(IdleAnimation)
+		local IdleTrack2 = Humanoid:LoadAnimation(IdleAnimation2)
+		
+		WalkTrack:AdjustSpeed(1)
+		IdleTrack:AdjustSpeed(1)
+		IdleTrack2:AdjustSpeed(1)
+	end
+	
+	
+	if input.KeyCode == Enum.KeyCode.C then
+		
+		task.spawn(function()
+			ChangePanel("Crouch Mode Off")
+		end)
+		
+		local Tweeninfo = TweenInfo.new(1.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
+		
+		local Goal = {
+			FieldOfView = 70
+		}
+		
+		local Tween = TweenService:Create(Camera, Tweeninfo, Goal)
+		Tween:Play()
+		Humanoid.WalkSpeed = 16
+		
+		WalkAnimation.AnimationId = 'rbxassetid://110337699181161'
+		
+	end
+	
+	
+	if input.KeyCode == Enum.KeyCode.B then
+		
+		task.spawn(function()
+			ChangePanel("Normal")
+		end)
+		
+		local Tweeninfo = TweenInfo.new(1.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
+
+		local Goal = {
+			FieldOfView = 70
+		}
+
+		local Tween = TweenService:Create(Camera, Tweeninfo, Goal)
+		Tween:Play()
+
+		Humanoid.WalkSpeed = 16
+
+		local Walk = Character:WaitForChild("Animate"):WaitForChild("walk"):WaitForChild("WalkAnim")
+		local WalkTrack = Humanoid:LoadAnimation(Walk)
+		local IdleAnimation = Character:WaitForChild("Animate"):WaitForChild("idle"):WaitForChild("Animation1")
+		local IdleAnimation2 = Character:WaitForChild("Animate"):WaitForChild("idle"):WaitForChild("Animation2")
+		local IdleTrack = Humanoid:LoadAnimation(IdleAnimation)
+		local IdleTrack2 = Humanoid:LoadAnimation(IdleAnimation2)
+
+		WalkTrack:AdjustSpeed(1)
+		IdleTrack:AdjustSpeed(1)
+		IdleTrack2:AdjustSpeed(1)
+
+	end
+end)
