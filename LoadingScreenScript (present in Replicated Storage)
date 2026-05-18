@@ -1,0 +1,41 @@
+local ContentProvider = game:GetService("ContentProvider")
+local ReplicatedFirst = game:GetService("ReplicatedFirst")
+local Plrs = game:GetService("Players")
+
+ReplicatedFirst:RemoveDefaultLoadingScreen()
+
+local Player = Plrs.LocalPlayer
+local PlayerGui = Player:WaitForChild("PlayerGui")
+
+local LoadingGUI = script.LoadingScreen:Clone()
+LoadingGUI.Parent = PlayerGui
+
+local MainFrame = LoadingGUI:WaitForChild("MainFrame")
+local InnerMainFrame = MainFrame:WaitForChild("InnerMainFrame")
+local TotalAssets = InnerMainFrame:WaitForChild("LoadingAssetsNumber")
+local LoadingText = InnerMainFrame:WaitForChild("LoadingText")
+local LoadingBar = InnerMainFrame:WaitForChild("Bar"):WaitForChild("FillBar")
+local SkipButton = InnerMainFrame:WaitForChild("TextButton")
+
+SkipButton.MouseButton1Click:Connect(function()
+	LoadingGUI:Destroy()
+end)
+
+local Assets = game:GetDescendants()
+
+for i, asset in pairs(Assets) do
+	ContentProvider:PreloadAsync({asset})
+	LoadingText.Text = "Loading".." ".. asset.Name .."..."
+	LoadingBar.Size = UDim2.new(i/#Assets,0,1,0)
+	TotalAssets.Text = "Assets:"..i.."/"..#Assets
+	task.wait()
+end
+
+LoadingText.Text = "Loading Complete."
+LoadingBar.Size = UDim2.new(1,0,1,0)
+TotalAssets.Text = "Assets Loaded."
+
+task.wait(1)
+
+LoadingGUI:Destroy()
+
